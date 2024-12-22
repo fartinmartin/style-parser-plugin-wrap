@@ -50,7 +50,7 @@ This plugin wraps the `parsed.text` string to a specified width, inserting line 
 
 It calculates the width of each character based on the provided `FontMetrics` and the `font` and `fontSize` values at the character's index.
 
-If a transform adds characters to `parsed.text` (e.g. for hanging bullets) the appropriate `Tansforms` in `parsed.transforms` will be updated to reflect their new index values.
+If plugin adds characters to `parsed.text` (e.g. for hanging bullets) the appropriate `Tansforms` in `parsed.transforms` will be updated to reflect their new index values.
 
 To create `FontMetrics` for your specific fonts, use the web tool and use in expressions as necessary:
 
