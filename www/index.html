@@ -16,10 +16,15 @@
   <body>
     <header>
       <div class="left">
-        <pre id="message">welcome, select a font to begin :)</pre>
+        <pre id="message">welcome :)</pre>
         <form name="font">
-          <input id="file" type="file" accept=".ttf,.otf,.woff,.woff2" />
-          <label for="file" tabindex="0">select font...</label>
+          <input
+            id="file"
+            type="file"
+            accept=".ttf,.otf,.woff,.woff2"
+            multiple
+          />
+          <label for="file" tabindex="0">select font(s)...</label>
           <button type="button" id="json" disabled>download json</button>
           <button type="button" id="jsx" disabled>download jsx</button>
         </form>
@@ -34,6 +39,7 @@
       </div>
     </header>
     <main>
+      <div id="font-list"></div>
       <div id="glyph-grid"></div>
     </main>
   </body>

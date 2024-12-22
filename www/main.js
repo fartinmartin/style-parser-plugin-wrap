@@ -52,6 +52,9 @@ function loadFont(font) {
 
     renderGrid(glyphs);
     setDisabled(false);
+    setFont(parsed.names.fontFamily.en, parsed.names.fontSubfamily.en);
+
+    console.log(parsed.names);
 
     print([`loaded: ${name}`, `unitsPerEm: ${unitsPerEm}`].join(' | '));
   } catch (error) {
@@ -63,6 +66,11 @@ function loadFont(font) {
 function setDisabled(value) {
   form.json.disabled = value;
   form.jsx.disabled = value;
+}
+
+function setFont(name, style) {
+  document.documentElement.style.setProperty('--glyph-font', name);
+  document.documentElement.style.setProperty('--glyph-style', style);
 }
 
 function getName(font) {

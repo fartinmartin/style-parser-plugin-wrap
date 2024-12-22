@@ -35,8 +35,8 @@ label[for='file']:focus {
   outline: 2px solid #4d90fe;
 }
 
-button:active,
-label[for='file']:active {
+button:active:not(:disabled),
+label[for='file']:active:not(:disabled) {
   background: #d1d1d1;
   transform: scale(0.98);
 }
@@ -85,7 +85,14 @@ header {
   background-color: white;
 }
 
+:root {
+  --glyph-font: monospace;
+  --glyph-style: normal;
+}
+
 .glyph-cell .glyph {
+  font-family: var(--glyph-font);
+  font-style: var(--glyph-style);
   font-size: 24px;
   margin: 5px 0;
 }
