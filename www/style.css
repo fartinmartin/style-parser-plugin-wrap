@@ -1,0 +1,106 @@
+body {
+  font-family: monospace;
+  padding: 1rem;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+form {
+  display: flex;
+  gap: 0.5rem;
+}
+
+input[id='file'] {
+  display: none;
+}
+
+button,
+label[for='file'] {
+  background: #e3e3e3;
+  border: 1px solid whitesmoke;
+  padding: 0.75rem 1rem;
+}
+
+button:hover,
+label[for='file']:hover {
+  cursor: pointer;
+  background: whitesmoke;
+}
+
+button:focus,
+label[for='file']:focus {
+  outline: 2px solid #4d90fe;
+}
+
+button:active,
+label[for='file']:active {
+  background: #d1d1d1;
+  transform: scale(0.98);
+}
+
+button:disabled,
+label[for='file']:disabled {
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  cursor: not-allowed;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  justify-content: space-between;
+}
+
+.left pre {
+  margin: 0;
+}
+
+.right .glyph-cell {
+  --border-color: whitesmoke;
+  border: 0.5px solid var(--border-color);
+}
+
+#glyph-grid {
+  --border-color: whitesmoke;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+  border: 0.5px solid var(--border-color);
+  margin-top: 1rem;
+}
+
+.glyph-cell {
+  padding: 0.5rem;
+  text-align: center;
+  border: 0.5px solid var(--border-color);
+  background-color: white;
+}
+
+.glyph-cell .glyph {
+  font-size: 24px;
+  margin: 5px 0;
+}
+
+.glyph-cell .index,
+.glyph-cell .unicode,
+.glyph-cell .width {
+  font-size: 12px;
+  color: #666;
+}
+
+.glyph-cell .index {
+  opacity: 0.25;
+}
+
+.glyph-cell .unicode {
+  opacity: 0.25;
+}
