@@ -1,14 +1,14 @@
 const form = document.forms.font;
 
-let name = '';
+let fontName = '';
 let glyphs = [];
 let unitsPerEm = 0;
 
 form.file.onchange = ({ target }) =>
   compute(target.files[0], target.files[0].name);
 
-form.json.onclick = () => downloadJSON(name, glyphs, unitsPerEm);
-form.jsx.onclick = () => downloadJSX(name, glyphs, unitsPerEm);
+form.json.onclick = () => downloadJSON(fontName, glyphs, unitsPerEm);
+form.jsx.onclick = () => downloadJSX(fontName, glyphs, unitsPerEm);
 
 const fontData = sessionStorage.getItem('fontData');
 if (fontData) {
@@ -46,7 +46,7 @@ function loadFont(font) {
     const parsed = opentype.parse(font, { lowMemory: true });
     if (!parsed) throw new Error(`error parsing font!`);
 
-    name = getName(parsed);
+    fontName = getFontName(parsed);
     unitsPerEm = getUnitsPerEm(parsed);
     glyphs = getGlyphs(parsed);
 
@@ -56,7 +56,7 @@ function loadFont(font) {
 
     console.log(parsed.names);
 
-    print([`loaded: ${name}`, `unitsPerEm: ${unitsPerEm}`].join(' | '));
+    print([`loaded: ${fontName}`, `unitsPerEm: ${unitsPerEm}`].join(' | '));
   } catch (error) {
     print(error.toString().toLowerCase());
     setDisabled(true);
@@ -68,12 +68,12 @@ function setDisabled(value) {
   form.jsx.disabled = value;
 }
 
-function setFont(name, style) {
-  document.documentElement.style.setProperty('--glyph-font', name);
+function setFont(fontName, style) {
+  document.documentElement.style.setProperty('--glyph-font', fontName);
   document.documentElement.style.setProperty('--glyph-style', style);
 }
 
-function getName(font) {
+function getFontName(font) {
   return font.names.postScriptName.en;
 }
 
@@ -86,6 +86,8 @@ function getGlyphs(font) {
 
   for (let index = 0; index < font.numGlyphs; index++) {
     const glyph = font.glyphs.get(index);
+    if (!glyph.unicode) continue;
+
     glyphs.push({
       index,
       name: glyph.name,
@@ -162,7 +164,7 @@ function renderGrid(glyphs) {
   glyphs.forEach(({ name, unicode, width, index }) => {
     const cell = document.createElement('div');
     cell.classList.add('glyph-cell');
-    cell.setAttribute('title', name);
+    if (name) cell.setAttribute('title', name);
 
     const glyphEl = document.createElement('div');
     glyphEl.classList.add('glyph');

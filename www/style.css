@@ -1,4 +1,19 @@
+:root {
+  --white-100: hsl(10, 10%, 100%);
+  --white-200: hsl(10, 10%, 90%);
+  --white-300: hsl(10, 10%, 80%);
+
+  --black-100: hsl(10, 10%, 10%);
+  --black-200: hsl(10, 10%, 30%);
+  --black-300: hsl(10, 10%, 40%);
+
+  --blue-100: hsl(217, 99%, 65%);
+  --blue-300: hsl(217, 99%, 45%);
+}
+
 body {
+  color: var(--black-100);
+  background: var(--white-100);
   font-family: monospace;
   padding: 1rem;
 }
@@ -19,32 +34,59 @@ input[id='file'] {
 
 button,
 label[for='file'] {
-  background: #e3e3e3;
-  border: 1px solid whitesmoke;
+  --text-color: var(--black-100);
+  --background-color: var(--white-300);
+  --border-color: var(--white-100);
+
+  --hover-text-color: var(--black-100);
+  --hover-background-color: var(--white-200);
+  --hover-border-color: var(--white-100);
+
+  --active-text-color: var(--black-100);
+  --active-background-color: var(--white-300);
+  --active-border-color: var(--white-100);
+
+  --disabled-text-color: var(--black-300);
+  --disabled-background-color: var(--white-200);
+  --disabled-border-color: var(--white-200);
+
+  --focus-outline-color: var(--blue-100);
+}
+
+button,
+label[for='file'] {
+  color: var(--text-color);
+  background: var(--background-color);
+  border: 1px solid var(--border-color);
   padding: 0.75rem 1rem;
 }
 
 button:hover,
 label[for='file']:hover {
   cursor: pointer;
-  background: whitesmoke;
+  color: var(--hover-text-color);
+  background: var(--hover-background-color);
+  border-color: var(--hover-border-color);
 }
 
 button:focus,
 label[for='file']:focus {
-  outline: 2px solid #4d90fe;
+  outline: 2px solid var(--focus-outline-color);
 }
 
 button:active:not(:disabled),
 label[for='file']:active:not(:disabled) {
-  background: #d1d1d1;
+  color: var(--active-text-color);
+  background: var(--active-background-color);
+  border-color: var(--active-border-color);
   transform: scale(0.98);
 }
 
 button:disabled,
 label[for='file']:disabled {
-  background: #f5f5f5;
-  border: 1px solid #ddd;
+  color: var(--disabled-text-color);
+  background: var(--disabled-background-color);
+  border: 1px solid var(--disabled-border-color);
   cursor: not-allowed;
 }
 
@@ -64,17 +106,18 @@ header {
   margin: 0;
 }
 
-.right .glyph-cell {
-  --border-color: whitesmoke;
+.right .glyph-cell,
+#glyph-grid {
+  --border-color: var(--white-200);
+  --background-color: var(--white-100);
+  --info-color: var(--black-300);
+
   border: 0.5px solid var(--border-color);
 }
 
 #glyph-grid {
-  --border-color: whitesmoke;
-
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
-  border: 0.5px solid var(--border-color);
   margin-top: 1rem;
 }
 
@@ -82,7 +125,7 @@ header {
   padding: 0.5rem;
   text-align: center;
   border: 0.5px solid var(--border-color);
-  background-color: white;
+  background: var(--background-color);
 }
 
 :root {
@@ -101,7 +144,7 @@ header {
 .glyph-cell .unicode,
 .glyph-cell .width {
   font-size: 12px;
-  color: #666;
+  color: var(--info-color);
 }
 
 .glyph-cell .index {
@@ -110,4 +153,39 @@ header {
 
 .glyph-cell .unicode {
   opacity: 0.25;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    color: var(--white-200);
+    background: var(--black-100);
+  }
+
+  .right .glyph-cell,
+  #glyph-grid {
+    --border-color: var(--black-200);
+    --background-color: var(--black-100);
+    --info-color: var(--white-300);
+  }
+
+  button,
+  label[for='file'] {
+    --text-color: var(--white-300);
+    --background-color: var(--black-300);
+    --border-color: var(--black-200);
+
+    --hover-text-color: var(--white-200);
+    --hover-background-color: var(--black-200);
+    --hover-border-color: var(--black-200);
+
+    --active-text-color: var(--white-300);
+    --active-background-color: var(--black-100);
+    --active-border-color: var(--black-300);
+
+    --disabled-text-color: var(--black-100);
+    --disabled-background-color: var(--black-200);
+    --disabled-border-color: var(--black-200);
+
+    --focus-outline-color: var(--blue-300);
+  }
 }
