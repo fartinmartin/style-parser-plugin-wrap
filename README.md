@@ -52,7 +52,7 @@ It calculates the width of each character based on the provided `FontMetrics` an
 
 If the plugin adds characters to `parsed.text` (e.g. for hanging bullets) the appropriate `Tansforms` in `parsed.transforms` will be updated to reflect their new index values.
 
-To create `FontMetrics` for your specific fonts, use the web tool and use in expressions as necessary:
+To create `FontMetrics` for your specific fonts, use the web tool to generate `jsx` files and use those in expressions as necessary:
 
 ```js
 const { RobotoRegular } = footage('roboto-regular.jsx').sourceData;
