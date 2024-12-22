@@ -52,7 +52,7 @@ It calculates the width of each character based on the provided `FontMetrics` an
 
 If the plugin adds characters to `parsed.text` (e.g. for hanging bullets) the appropriate `Tansforms` in `parsed.transforms` will be updated to reflect their new index values.
 
-To create `FontMetrics` for your specific fonts, use the web tool and use in expressions as necessary:
+To create `FontMetrics` for your specific fonts, use the web tool to generate `jsx` files and use those in expressions as necessary:
 
 ```js
 const { RobotoRegular } = footage('roboto-regular.jsx').sourceData;
@@ -101,4 +101,4 @@ Thus, if we want to use `layerRect()`, we should use _point text_. With point te
 
 This is where this plugin comes into play. We're likely using `layerRect()` inside of a template. A good template will make breaking things hard for the user to do. With that in mind, it would be ideal if users of our template didn't have to be responsible for adding manual line breaks. With `wrap()` they won't have to!
 
-This functionality could act on `textLayer.text.sourceText` directly, however it would need to poll `getStyleAt(index)` for each character, which in early tests seemed very slow! Since `style-parser` tracks styles at index values via the `parsed.transforms` array, we can make these calculations much faster as a `style-parser` plugin.
+This functionality could act on `textLayer.text.sourceText` directly, however it would need to poll `getStyleAt(index)` for each character, which in early tests seemed very slow! Since `style-parser` tracks styles at index values via the `parsed.transforms` array before they're applied to `textStyle`, we can make these calculations much faster as a `style-parser` plugin.
