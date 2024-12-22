@@ -7,7 +7,8 @@ let unitsPerEm = 0;
 form.file.onchange = ({ target }) =>
   compute(target.files[0], target.files[0].name);
 
-form.download.onclick = () => download(name, glyphs, unitsPerEm);
+form.json.onclick = () => downloadJSON(name, glyphs, unitsPerEm);
+form.jsx.onclick = () => downloadJSX(name, glyphs, unitsPerEm);
 
 const fontData = sessionStorage.getItem('fontData');
 if (fontData) {
@@ -23,14 +24,12 @@ async function compute(file, name) {
 
   try {
     const data = await file.arrayBuffer();
-    let error;
 
     try {
       const base64String = arrayBufferToBase64(data);
       sessionStorage.setItem('fontData', base64String);
     } catch (err) {
       print(err.toString());
-      error = err;
     }
 
     const font = isWoff2 ? Module.decompress(data) : data;
@@ -52,13 +51,18 @@ function loadFont(font) {
     glyphs = getGlyphs(parsed);
 
     renderGrid(glyphs);
-    form.download.disabled = false;
+    setDisabled(false);
 
     print([`loaded: ${name}`, `unitsPerEm: ${unitsPerEm}`].join(' | '));
   } catch (error) {
     print(error.toString().toLowerCase());
-    form.download.disabled = true;
+    setDisabled(true);
   }
+}
+
+function setDisabled(value) {
+  form.json.disabled = value;
+  form.jsx.disabled = value;
 }
 
 function getName(font) {
@@ -74,7 +78,6 @@ function getGlyphs(font) {
 
   for (let index = 0; index < font.numGlyphs; index++) {
     const glyph = font.glyphs.get(index);
-    if (index === 2) console.log(glyph);
     glyphs.push({
       index,
       name: glyph.name,
@@ -133,19 +136,16 @@ function generateFontMetrics(glyphs, unitsPerEm) {
 
 //
 
-function download(name, glyphs, unitsPerEm) {
+function downloadJSON(name, glyphs, unitsPerEm) {
   const data = generateFontMetrics(glyphs, unitsPerEm);
   const json = JSON.stringify(data);
+  downloadFile(json, `${name}.json`);
+}
 
-  const blob = new Blob([json], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `${name}.json`;
-  a.click();
-
-  URL.revokeObjectURL(url);
+function downloadJSX(name, glyphs, unitsPerEm) {
+  const data = generateFontMetrics(glyphs, unitsPerEm);
+  const content = `{\n\t"${toPascalCase(name)}": ${JSON.stringify(data)}\n}`;
+  downloadFile(content, `${name}.jsx`, 'text/plain');
 }
 
 function renderGrid(glyphs) {
@@ -196,6 +196,15 @@ function print(message) {
   pre.innerHTML = message;
 }
 
+function downloadFile(content, filename, type = 'application/json') {
+  const blob = new Blob([content], { type });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(link.href);
+}
+
 function arrayBufferToBase64(buffer) {
   const CHUNK_SIZE = 8192;
   let result = '';
@@ -211,4 +220,10 @@ function arrayBufferToBase64(buffer) {
 
 function base64ToArrayBuffer(base64) {
   return Uint8Array.from(atob(base64), (c) => c.charCodeAt(0)).buffer;
+}
+
+function toPascalCase(str) {
+  return str.replace(/(^\w|[\s_-]\w)/g, (match) =>
+    match.replace(/[\s_-]/, '').toUpperCase()
+  );
 }

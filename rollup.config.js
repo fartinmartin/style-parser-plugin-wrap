@@ -18,13 +18,7 @@ export default {
         _npmVersion: pkg.version,
       },
     }),
-    typescript({
-      module: 'esnext',
-      target: 'esnext',
-      noImplicitAny: true,
-      moduleResolution: 'node',
-      strict: true,
-    }),
+    typescript(),
     afterEffectJsx(),
   ],
 };

@@ -20,24 +20,70 @@ function normalizeText(string: string) {
   );
 }
 
-interface FontStyles {
-  font: string;
-  fontSize: number;
-}
-
 interface WrapOptions {
   maxWidth: number;
   indent: string;
   styles: Styles;
-  getCharWidth: (char: string, fontStyles: FontStyles) => number;
+  fontMetrics: Record<string, FontMetrics>;
+}
+
+interface FontMetrics {
+  unitsPerEm: number;
+  defaultWidth: number;
+  widthGroups: Record<number, Array<[number, number]>>;
+}
+
+interface FontStyles {
+  font: string;
+  fontSize: number;
 }
 
 function wrap({
   maxWidth,
   indent,
   styles: defaultStyles,
-  getCharWidth,
+  fontMetrics,
 }: WrapOptions): Plugin {
+  const getRawCharWidth = (
+    char: string,
+    { widthGroups, defaultWidth }: FontMetrics
+  ) => {
+    const charCode = char.charCodeAt(0);
+
+    for (const [width, ranges] of Object.entries(widthGroups)) {
+      let left = 0;
+      let right = ranges.length - 1;
+
+      while (left <= right) {
+        const mid = Math.floor((left + right) / 2);
+        const [start, end] = ranges[mid]!;
+        if (start === undefined || end === undefined) {
+          left = mid + 1;
+        } else if (charCode >= start && charCode <= end) {
+          return parseInt(width);
+        } else if (charCode < start) {
+          right = mid - 1;
+        } else {
+          left = mid + 1;
+        }
+      }
+    }
+
+    return defaultWidth;
+  };
+
+  const scale = (value: number, fontSize: number, emSize: number) => {
+    return (value / emSize) * fontSize;
+  };
+
+  const getCharWidth = (char: string, fontStyles: FontStyles) => {
+    const valid = Object.keys(fontMetrics).includes(fontStyles.font);
+    if (!valid) throw `${fontStyles.font} is not supported!`;
+    const font = fontMetrics[fontStyles.font];
+    const charWidth = getRawCharWidth(char, font);
+    return scale(charWidth, fontStyles.fontSize, font.unitsPerEm);
+  };
+
   const getStringWidth = (string: string, fontStyles: FontStyles) => {
     return string
       .split('')
