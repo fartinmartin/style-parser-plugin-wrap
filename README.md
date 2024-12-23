@@ -1,16 +1,17 @@
 # style-parser-plugin-wrap
 
-An example plugin for [`@motiondeveloper/style-parser`](https://github.com/motiondeveloper/style-parser), specifically for PR #4.
+> [!NOTE]
+> This plugin is under development!
+
+An example plugin for [`@motiondeveloper/style-parser`](https://github.com/motiondeveloper/style-parser), specifically for https://github.com/motiondeveloper/style-parser/pull/4.
 
 Requires `FontMetrics` for each font your text layer supports. Get `FontMetrics` via the [web tool](https://fartinmartin.github.io/style-parser-plugin-wrap/)! Example use:
 
 ```js
 const { parse, createTextStyle } = footage('style-parser.jsx').sourceData.get();
-const { wrap } = footage('style-parser-plugin-wrap.jsx').sourceData;
+const { normalizeText, wrap } = footage('style-parser-plugin-wrap.jsx').sourceData;
 
-const { RobotoRegular } = footage('roboto-regular.jsx').sourceData;
-const { RobotoBold } = footage('roboto-bold.jsx').sourceData;
-const { RobotoItalic } = footage('roboto-italic.jsx').sourceData;
+const { RobotoRegular, RobotoBold, RobotoItalic } = footage('font-metrics.jsx').sourceData;
 
 const inputLayer = thisComp.layer('Input');
 const inputText = inputLayer.text.sourceText.value;
@@ -21,7 +22,7 @@ const styles = {
   leading: 48,
 };
 
-parse(inputText, {
+parse(normalizeText(inputText), {
   textStyle: createTextStyle(styles),
   fontMap: {
     regular: 'Roboto-Regular',
@@ -44,7 +45,7 @@ parse(inputText, {
 
 ---
 
-## How
+## What
 
 This plugin wraps the `parsed.text` string to a specified width, inserting line breaks and handling indentation for hanging bullets.
 
@@ -52,17 +53,17 @@ It calculates the width of each character based on the provided `FontMetrics` an
 
 If the plugin adds characters to `parsed.text` (e.g. for hanging bullets) the appropriate `Tansforms` in `parsed.transforms` will be updated to reflect their new index values.
 
-To create `FontMetrics` for your specific fonts, use the web tool to generate `jsx` files and use those in expressions as necessary:
+> [!NOTE]
+> Currently, "hanging bullets" require your bullet lines to start with the `•` character. Use the `normalizeText` utility on your input text (before passing to `style-parser/parse()`) to convert markdown-like `*` and `-` lines to `•`—see example above for details.
+
+To create `FontMetrics` for your specific fonts, use the [web tool](https://fartinmartin.github.io/style-parser-plugin-wrap/) to generate `jsx` files and use those in expressions as necessary. Each key on `fontMetrics` should be a "PostScript font name" [as recognized by After Effects](https://helpx.adobe.com/after-effects/using/expressions-text-properties.html#PostScriptfontexpressionmenu):
 
 ```js
-const { RobotoRegular } = footage('roboto-regular.jsx').sourceData;
-const { RobotoBold } = footage('roboto-bold.jsx').sourceData;
-const { RobotoItalic } = footage('roboto-italic.jsx').sourceData;
+const { RobotoRegular, RobotoBold, RobotoItalic } = footage('font-metrics.jsx').sourceData;
 
 // later...
 wrap({
-  maxWidth: effect('Max Width')(1).value,
-  styles,
+  // ...
   fontMetrics: {
     'Roboto-Regular': RobotoRegular,
     'Roboto-Bold': RobotoBold,
@@ -93,12 +94,18 @@ const totalHeight = xHeight + leading * (numLines - 1);
 
 Tim Haywood does [an excellent job explaining](https://motiondeveloper.com/blog/dealing-with-descenders) why this is desired.
 
-However! You may have noticed above that in order to calculate the `totalHeight` we need to know the number of lines. `layerRect()` does this by [counting the total number](https://github.com/motiondeveloper/aefunctions/blob/a6a777177fe0e0acb5451a0f0f265fecd41153a1/src/index.ts#L353) of return, new line, and "end of text" characters in our text.
+However! You may have noticed above that in order to calculate the `totalHeight` we need to know the number of lines. `layerRect()` does this by [counting the total number](https://github.com/motiondeveloper/aefunctions/blob/a6a777177fe0e0acb5451a0f0f265fecd41153a1/src/index.ts#L353) of return, new line, and "end of text" characters in our text:
+
+```js
+const numLines = (text) => Math.max(text.split(/[^\r\n\3]*/gm).length - 1, 0);
+```
 
 If our text layer is a _paragraph text_ layer, After Effects will wrap our text without the use of these characters and we will have no way of knowing how many lines are rendered or where in our text line breaks occur!
 
 Thus, if we want to use `layerRect()`, we should use _point text_. With point text we can manually enter return characters and our calculated height will react accordingly.
 
-This is where this plugin comes into play. We're likely using `layerRect()` inside of a template. A good template will make breaking things hard for the user to do. With that in mind, it would be ideal if users of our template didn't have to be responsible for adding manual line breaks. With `wrap()` they won't have to!
+However, we're likely using `layerRect()` inside of a template. A good template will make breaking things hard for the user to do. With that in mind, it would be ideal if users of our template didn't have to be responsible for adding manual line breaks. With `style-parser-plugin-wrap` they won't have to!
 
-This functionality could act on `textLayer.text.sourceText` directly, however it would need to poll `getStyleAt(index)` for each character, which in early tests seemed very slow! Since `style-parser` tracks styles at index values via the `parsed.transforms` array before they're applied to `textStyle`, we can make these calculations much faster as a `style-parser` plugin.
+Instead of relying on After Effects to automatically wrap our text or for our users to manually add line breaks, `wrap()` will calculate the width of each line based on the character width at each character index. It does this by looking up the `FontMetric` for the character's `font` and scaling it to match the character's `fontSize`. This means we can use _point text_ and automatically add line break characters—the best of both worlds!
+
+This functionality _could_ act on `textLayer.text.sourceText` directly, and therefore NOT be a "plugin" for `style-parser`. However it would need to poll `getStyleAt(index)` for each character, which in early tests seemed very slow! Since `style-parser` tracks styles at index values via the `parsed.transforms` array before they're applied to a `TextStyle` object, we can make these calculations much faster as a `style-parser` plugin.
