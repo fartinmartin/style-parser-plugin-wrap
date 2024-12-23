@@ -1,6 +1,6 @@
 # style-parser-plugin-wrap
 
-An example plugin for [`@motiondeveloper/style-parser`](https://github.com/motiondeveloper/style-parser), specifically for PR #4.
+An example plugin for [`@motiondeveloper/style-parser`](https://github.com/motiondeveloper/style-parser), specifically for https://github.com/motiondeveloper/style-parser/pull/4.
 
 Requires `FontMetrics` for each font your text layer supports. Get `FontMetrics` via the [web tool](https://fartinmartin.github.io/style-parser-plugin-wrap/)! Example use:
 
