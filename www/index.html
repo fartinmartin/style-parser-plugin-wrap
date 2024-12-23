@@ -16,8 +16,13 @@
   <body>
     <header>
       <div class="left">
-        <pre id="message">welcome :)</pre>
-        <form name="font">
+        <h1>
+          📏 font metrics for
+          <a href="https://github.com/fartinmartin/style-parser-plugin-wrap/"
+            >@fartinmartin/style-parser-plugin-wrap</a
+          >
+        </h1>
+        <form name="io">
           <input
             id="file"
             type="file"
@@ -26,7 +31,6 @@
           />
           <label for="file" tabindex="0">select font(s)...</label>
           <button type="button" id="jsx" disabled>download jsx</button>
-          <button type="button" id="json" disabled>download json</button>
         </form>
       </div>
       <div class="right">
@@ -39,7 +43,9 @@
       </div>
     </header>
     <main>
-      <div id="font-list"></div>
+      <form name="fonts">
+        <div id="font-list"></div>
+      </form>
       <div id="glyph-grid"></div>
     </main>
   </body>

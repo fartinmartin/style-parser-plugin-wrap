@@ -7,7 +7,9 @@
   --black-200: hsl(10, 10%, 30%);
   --black-300: hsl(10, 10%, 40%);
 
-  --blue-100: hsl(217, 99%, 65%);
+  --blue-000: hsl(217, 99%, 85%);
+  --blue-100: hsl(217, 99%, 75%);
+  --blue-200: hsl(217, 99%, 55%);
   --blue-300: hsl(217, 99%, 45%);
 }
 
@@ -21,6 +23,20 @@ body {
 * {
   box-sizing: border-box;
   font-family: inherit;
+}
+
+h1 {
+  font-size: 0.875rem;
+}
+
+a,
+a:visited {
+  color: var(--blue-300);
+  text-underline-offset: 2px;
+}
+
+a:hover {
+  color: var(--blue-100);
 }
 
 form {
@@ -50,7 +66,7 @@ label[for='file'] {
   --disabled-background-color: var(--white-200);
   --disabled-border-color: var(--white-200);
 
-  --focus-outline-color: var(--blue-100);
+  --focus-outline-color: var(--blue-200);
 }
 
 button,
@@ -106,18 +122,100 @@ header {
   margin: 0;
 }
 
-.right .glyph-cell,
-#glyph-grid {
+.glyph-cell[title='glyph key'] {
+  border: 0.5px solid var(--border-color);
+}
+
+.glyph-cell[title='glyph key'],
+main {
   --border-color: var(--white-200);
   --background-color: var(--white-100);
   --info-color: var(--black-300);
+}
 
-  border: 0.5px solid var(--border-color);
+#font-list {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+#font-list > .font-item {
+  display: flex;
+  align-items: center;
+}
+
+#font-list > .font-item input {
+  display: none;
+}
+
+#font-list {
+  --background-color: var(--white-100);
+  --border-color: var(--white-200);
+
+  --hover-background-color: var(--white-200);
+  --hover-border-color: var(--white-300);
+
+  --checked-background-color: var(--blue-000);
+  --checked-border-color: var(--blue-100);
+
+  --checked-hover-background-color: var(--blue-100);
+  --checked-hover-border-color: var(--blue-200);
+
+  --button-color: var(--white-300);
+  --checked-button-color: var(--blue-300);
+}
+
+#font-list > .font-item label {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+
+  cursor: pointer;
+  user-select: none;
+
+  padding: 0.25rem 1rem;
+  border-radius: 2rem;
+
+  background: var(--background-color);
+  border: 2px solid var(--border-color);
+}
+
+#font-list > .font-item label span {
+  margin-right: 0.5rem;
+}
+
+#font-list > .font-item:hover label {
+  background: var(--hover-background-color);
+  border-color: var(--hover-border-color);
+}
+
+#font-list > .font-item:has(input:checked) label {
+  background: var(--checked-background-color);
+  border-color: var(--checked-border-color);
+}
+
+#font-list > .font-item:has(input:checked):hover label {
+  background: var(--checked-hover-background-color);
+  border-color: var(--checked-hover-border-color);
+}
+
+#font-list > .font-item button {
+  background: transparent;
+  padding: 0;
+  border: none;
+  padding: 0.25em;
+  margin: -0.5em;
+  color: var(--button-color);
+}
+
+#font-list > .font-item:has(input:checked) label button {
+  color: var(--checked-button-color);
 }
 
 #glyph-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+  border: 0.5px solid var(--border-color);
   margin-top: 1rem;
 }
 
@@ -136,7 +234,9 @@ header {
 .glyph-cell .glyph {
   font-family: var(--glyph-font);
   font-style: var(--glyph-style);
+  font-weight: var(--glyph-weight);
   font-size: 24px;
+  min-height: 29px;
   margin: 5px 0;
 }
 
@@ -155,14 +255,28 @@ header {
   opacity: 0.25;
 }
 
+.glyph-cell .glyph .whitespace {
+  background: var(--white-200);
+  opacity: 0.5;
+}
+
 @media (prefers-color-scheme: dark) {
   body {
     color: var(--white-200);
     background: var(--black-100);
   }
 
-  .right .glyph-cell,
-  #glyph-grid {
+  a,
+  a:visited {
+    color: var(--blue-100);
+  }
+
+  a:hover {
+    color: var(--blue-000);
+  }
+
+  .glyph-cell[title='glyph key'],
+  main {
     --border-color: var(--black-200);
     --background-color: var(--black-100);
     --info-color: var(--white-300);
@@ -170,7 +284,7 @@ header {
 
   button,
   label[for='file'] {
-    --text-color: var(--white-300);
+    --text-color: var(--white-100);
     --background-color: var(--black-300);
     --border-color: var(--black-200);
 
@@ -187,5 +301,22 @@ header {
     --disabled-border-color: var(--black-200);
 
     --focus-outline-color: var(--blue-300);
+  }
+
+  #font-list {
+    --background-color: var(--black-100);
+    --border-color: var(--black-200);
+
+    --hover-background-color: var(--black-200);
+    --hover-border-color: var(--black-300);
+
+    --checked-background-color: var(--blue-300);
+    --checked-border-color: var(--blue-200);
+
+    --checked-hover-background-color: var(--blue-200);
+    --checked-hover-border-color: var(--blue-100);
+
+    --button-color: var(--black-300);
+    --checked-button-color: var(--blue-100);
   }
 }
