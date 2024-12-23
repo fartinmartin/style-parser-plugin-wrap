@@ -1,11 +1,11 @@
 const ioForm = document.forms.io;
-const fonts = new Set(); // should probs be a map?
+const fonts = new Map();
 
 ioForm.file.onchange = async ({ target }) => {
   for (const file of target.files) {
     const font = await loadFont(file);
     const metrics = getMetrics(font);
-    fonts.add({ fileName: file.name, ...metrics });
+    fonts.set(metrics.fontName, { fileName: file.name, ...metrics });
   }
 
   render(fonts);
@@ -16,9 +16,8 @@ ioForm.jsx.onclick = () => downloadJSX();
 const fontsForm = document.forms.fonts;
 
 fontsForm.onchange = () => {
-  const selected = fontsForm.fonts.value;
-  const font = [...fonts].find((i) => i.fontName === selected);
-  if (font) renderGlyphGrid(font);
+  const selected = fonts.get(fontsForm.fonts.value);
+  if (selected) renderGlyphGrid(selected);
 };
 
 setDisabled(true);
@@ -93,7 +92,7 @@ function loadStorage() {
     if (fontData) {
       const font = base64ToArrayBuffer(fontData);
       const metrics = getMetrics(font);
-      fonts.add(metrics);
+      fonts.set(metrics.fontName, { fileName, ...metrics });
     }
   }
 
@@ -114,7 +113,7 @@ function removeFontFromStorage(fileName) {
 //
 
 function render(fonts) {
-  const fontsArray = [...fonts];
+  const fontsArray = Array.from(fonts.values());
   renderFontList(fontsArray);
 
   const selectedFont = fontsArray[0];
@@ -220,7 +219,7 @@ function generateFontMetrics({ glyphs, unitsPerEm }) {
 //
 
 function getData() {
-  const fontsArray = [...fonts];
+  const fontsArray = Array.from(fonts.values());
 
   const data = fontsArray.reduce((obj, font) => {
     return { ...obj, [toPascalCase(font.fontName)]: generateFontMetrics(font) };
@@ -325,9 +324,9 @@ function renderGlyphGrid(font) {
 
 function handleRemove({ target }) {
   const name = target.dataset.value;
-  const font = [...fonts].find((i) => i.fontName === name);
+  const font = fonts.get(name);
   if (font) {
-    fonts.delete(font);
+    fonts.delete(name);
     removeFontFromStorage(font.fileName);
     render(fonts);
   }
