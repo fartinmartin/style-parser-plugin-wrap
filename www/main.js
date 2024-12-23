@@ -41,7 +41,6 @@ async function loadFont(file) {
 
     return isWoff2 ? Module.decompress(data) : data;
   } catch (err) {
-    print(err.toString());
     console.log(err);
     throw err;
   }
@@ -60,7 +59,6 @@ function getMetrics(font) {
       glyphs: getGlyphs(parsed),
     };
   } catch (error) {
-    print(error.toString().toLowerCase());
     setDisabled(true);
   }
 }
@@ -349,11 +347,6 @@ async function loadWAWOFF2() {
       window.Module = { onRuntimeInitialized };
     });
   }
-}
-
-function print(message) {
-  const pre = document.getElementById('message');
-  pre.innerHTML = message;
 }
 
 function downloadFile(content, filename, type = 'application/json') {
