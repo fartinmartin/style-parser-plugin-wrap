@@ -2,7 +2,7 @@
 
 An example plugin for [`@motiondeveloper/style-parser`](https://github.com/motiondeveloper/style-parser), specifically for PR #4.
 
-Requires `FontMetrics` for each font your text layer supports. Example use:
+Requires `FontMetrics` for each font your text layer supports. Get `FontMetrics` via the [web tool](https://fartinmartin.github.io/style-parser-plugin-wrap/)! Example use:
 
 ```js
 const { parse, createTextStyle } = footage('style-parser.jsx').sourceData.get();
