@@ -8,7 +8,7 @@
     "tsc": "tsc",
     "build": "rollup -c",
     "watch": "rollup -cw",
-    "www": "npx live-server --open=www",
+    "www": "npx live-server --open=docs",
     "release": "npm run build && gh release create $(node -pe \"require('./package.json').version\") $(node -pe \"require('./package.json').main\")"
   },
   "repository": {
