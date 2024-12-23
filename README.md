@@ -45,7 +45,7 @@ parse(normalizeText(inputText), {
 
 ---
 
-## How
+## What
 
 This plugin wraps the `parsed.text` string to a specified width, inserting line breaks and handling indentation for hanging bullets.
 
