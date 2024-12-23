@@ -56,7 +56,7 @@ If the plugin adds characters to `parsed.text` (e.g. for hanging bullets) the ap
 > [!NOTE]
 > Currently, "hanging bullets" require your bullet lines to start with the `•` character. Use the `normalizeText` utility on your input text (before passing to `style-parser/parse()`) to convert markdown-like `*` and `-` lines to `•`—see example above for details.
 
-To create `FontMetrics` for your specific fonts, use the [web tool](https://fartinmartin.github.io/style-parser-plugin-wrap/) to generate `jsx` files and use those in expressions as necessary:
+To create `FontMetrics` for your specific fonts, use the [web tool](https://fartinmartin.github.io/style-parser-plugin-wrap/) to generate `jsx` files and use those in expressions as necessary. Each key on `fontMetrics` should be a "PostScript font name" [as recognized by After Effects](https://helpx.adobe.com/after-effects/using/expressions-text-properties.html#PostScriptfontexpressionmenu):
 
 ```js
 const { RobotoRegular, RobotoBold, RobotoItalic } = footage('font-metrics.jsx').sourceData;
