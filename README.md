@@ -54,7 +54,7 @@ It calculates the width of each character based on the provided `FontMetrics` an
 If the plugin adds characters to `parsed.text` (e.g. for hanging bullets) the appropriate `Tansforms` in `parsed.transforms` will be updated to reflect their new index values.
 
 > [!NOTE]
-> Currently, "hanging bullets" require your bullet lines to start with the `•` character. Use the `normalizeText` utility on your input text (before passing to `@style-parser/parse()`) to convert markdown-like `*` and `-` lines to `•`—see example above for details.
+> Currently, "hanging bullets" require your bullet lines to start with the `•` character. Use the `normalizeText` utility on your input text (before passing to `style-parser/parse()`) to convert markdown-like `*` and `-` lines to `•`—see example above for details.
 
 To create `FontMetrics` for your specific fonts, use the web tool to generate `jsx` files and use those in expressions as necessary:
 
